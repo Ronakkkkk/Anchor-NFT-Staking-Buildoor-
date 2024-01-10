@@ -16,7 +16,15 @@ declare_id!("9QtXBKnLPGkv6EmtF4Pk8p75NSH8wPLXkP1K3Ydshb5k");
 pub mod anchor_nft_staking {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+    pub fn stake(ctx: Context<Stake>) -> Result<()> {
+        Ok(())
+    }
+
+    pub fn redeem(ctx: Context<Redeem>) -> Result<()> {
+        Ok(())
+    }
+
+    pub fn unstake(ctx: Context<Unstake>) -> Result<()> {
         Ok(())
     }
 }
@@ -42,6 +50,20 @@ impl Default for StakeState{
     fn default() -> Self {
         StakeState::Unstaked
     }
+}
+
+#[derive(Clone)]
+pub struct Metadata;
+
+impl anchor_lang::Id for Metadata{
+    fn id() -. Pubkey{
+        MetadataTokenId
+    }
+}
+
+#[derive(Accounts)]
+pub struct Stake<'info> {
+    
 }
 
 #[derive(Accounts)]
