@@ -56,7 +56,7 @@ impl Default for StakeState{
 pub struct Metadata;
 
 impl anchor_lang::Id for Metadata{
-    fn id() -. Pubkey{
+    fn id() -> Pubkey{
         MetadataTokenId
     }
 }
@@ -65,21 +65,35 @@ impl anchor_lang::Id for Metadata{
 pub struct Stake<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
+
     #[account(
         mut,
-        associated_token::mint-nft_mint,
-        associated_token::authority=user
+        associated_token::mint =nft_mint,
+        associated_token::authority= user,
     )]
+    pub nft_token_account: Account<'info, TokenAccount>
 
-    pub nft_token_account: Account<'info, TokenAccount>,
     pub nft_mint: Account<'info, Mint>,
-    ///CHECK: Manual Validation
+
+    ///CHECK: Manual Validation 
+    #[account(owner=MetadataTokenId)]
+    pub nft_edition: UncheckAccount<'info>
+
     #[account(
         init_if_needed,
         payer=user,
         space= std::mem::size_of::<UserStakeInfo>() + 8,
-        seeds= []
+        seeds= [user.key().as_ref(), nft_token_account.key().as_ref()],
+        bump,
     )]
+    pub stake_state: Account<'info, UserStakeInfo>,
+
+    ///CHECK: Manual Validation
+    #[account(mut, seeds= ["authority".as_bytes.as_ref()], bump)]
+    pub program_authority: UncheckAccount<'info>,
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+    pub metadata_program: Program<'info, Metadata>
 
 }
 
