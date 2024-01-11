@@ -63,7 +63,24 @@ impl anchor_lang::Id for Metadata{
 
 #[derive(Accounts)]
 pub struct Stake<'info> {
-    
+    #[account(mut)]
+    pub user: Signer<'info>,
+    #[account(
+        mut,
+        associated_token::mint-nft_mint,
+        associated_token::authority=user
+    )]
+
+    pub nft_token_account: Account<'info, TokenAccount>,
+    pub nft_mint: Account<'info, Mint>,
+    ///CHECK: Manual Validation
+    #[account(
+        init_if_needed,
+        payer=user,
+        space= std::mem::size_of::<UserStakeInfo>() + 8,
+        seeds= []
+    )]
+
 }
 
 #[derive(Accounts)]
