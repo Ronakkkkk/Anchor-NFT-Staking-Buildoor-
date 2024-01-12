@@ -20,13 +20,7 @@ pub mod anchor_nft_staking {
         Ok(())
     }
 
-    pub fn redeem(ctx: Context<Redeem>) -> Result<()> {
-        Ok(())
-    }
 
-    pub fn unstake(ctx: Context<Unstake>) -> Result<()> {
-        Ok(())
-    }
 }
 
 
@@ -71,13 +65,13 @@ pub struct Stake<'info> {
         associated_token::mint =nft_mint,
         associated_token::authority= user,
     )]
-    pub nft_token_account: Account<'info, TokenAccount>
+    pub nft_token_account: Account<'info, TokenAccount>,
 
     pub nft_mint: Account<'info, Mint>,
 
     ///CHECK: Manual Validation 
     #[account(owner=MetadataTokenId)]
-    pub nft_edition: UncheckAccount<'info>
+    pub nft_edition: UncheckedAccount<'info>,
 
     #[account(
         init_if_needed,
@@ -90,10 +84,10 @@ pub struct Stake<'info> {
 
     ///CHECK: Manual Validation
     #[account(mut, seeds= ["authority".as_bytes.as_ref()], bump)]
-    pub program_authority: UncheckAccount<'info>,
+    pub program_authority: UncheckedAccount<'info>,
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
-    pub metadata_program: Program<'info, Metadata>
+    pub metadata_program: Program<'info, Metadata>,
 
 }
 
