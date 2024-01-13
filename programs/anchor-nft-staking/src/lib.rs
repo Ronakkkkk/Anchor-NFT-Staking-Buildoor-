@@ -83,7 +83,7 @@ pub struct Stake<'info> {
     pub stake_state: Account<'info, UserStakeInfo>,
 
     ///CHECK: Manual Validation
-    #[account(mut, seeds= ["authority".as_bytes.as_ref()], bump)]
+    #[account(mut, seeds= ["authority".as_bytes().as_ref()], bump)]
     pub program_authority: UncheckedAccount<'info>,
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
@@ -91,5 +91,4 @@ pub struct Stake<'info> {
 
 }
 
-#[derive(Accounts)]
-pub struct Initialize {}
+
