@@ -24,9 +24,15 @@ describe("anchor-nft-staking", () => {
   })
 
 
-  it("Is initialized!", async () => {
+  it("Stakes", async () => {
     // Add your test here.
-    const tx = await program.methods.initialize().rpc();
-    console.log("Your transaction signature", tx);
+    await program.methods.stake().accounts({
+      nftTokenAccount: nft.tokenAddress, 
+      nftMint: nft.mintAddress, 
+      nftEdition: nft.masterEditionAddress,
+       metadataProgram: METADATA_PROGRAM_ID,
+      }).rpc()
+    // const tx = await program.methods.initialize().rpc();
+    // console.log("Your transaction signature", tx);
   });
 });
