@@ -17,8 +17,21 @@ pub mod anchor_nft_staking {
     use super::*;
 
     pub fn stake(ctx: Context<Stake>) -> Result<()> {
+        let clock = Clock::get().unwrap();
+        msg!("Approving delegate");
+
+        let cpi_approve_program = ctx.accounts.token_program.to_account_info();
+        let cpi_approve_accounts = Approve {
+            to: ctx.accounts.nft_token_account.to_account_info(),
+            delegate: ctx.accounts.program_authority.to_account_info(),
+            authority: ctx.accounts.user.to_account_info(),
+        };
+
+        let cpi_approve_ctx = CpiContext::new(cpi_approve_program, cpi_approve_accounts);
+            token::approve(cpi_approve_ctx,1)?;
+
+
         Ok(())
-    }
 
 
 }
