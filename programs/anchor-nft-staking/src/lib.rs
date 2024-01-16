@@ -46,7 +46,7 @@ pub mod anchor_nft_staking {
                 ctx.accounts.nft_token_account.key(),
                 ctx.accounts.nft_edition.key(),
                 ctx.accounts.nft_mint.key()
-            )
+            ),
 
             &[
                 ctx.accounts.program_authority.to_account_info(),
@@ -61,13 +61,13 @@ pub mod anchor_nft_staking {
         ctx.accounts.stake_state.token_account = ctx.accounts.nft_token_account.key();
         ctx.accounts.stake_state.user_pubkey = ctx.accounts.user.key();
         ctx.accounts.stake_state.stake_state = StakeState::Staked;
-        ctx.accounts.stake_state.stake_start_time = clcock.unix_timestamp;
+        ctx.accounts.stake_state.stake_start_time = clock.unix_timestamp;
         ctx.accounts.stake_state.last_stake_redeem = clock.unix_timestamp;
         ctx.accounts.stake_state.is_initialized = true;
 
 
         Ok(())
-
+    }
 
 }
 
