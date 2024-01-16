@@ -17,6 +17,12 @@ pub mod anchor_nft_staking {
     use super::*;
 
     pub fn stake(ctx: Context<Stake>) -> Result<()> {
+
+        require!(
+            ctx.accounts.stake_state.stake_state == StakeState::Unstaked,
+            StakeError::AlreadyStaked
+        );
+
         let clock = Clock::get().unwrap();
        
         msg!("Approving delegate");
@@ -131,6 +137,12 @@ pub struct Stake<'info> {
     pub system_program: Program<'info, System>,
     pub metadata_program: Program<'info, Metadata>,
 
+}
+
+#[error_code]
+pub enum StakeError {
+    #[msg("NFT already staked")]
+    AlreadyStaked,
 }
 
 
