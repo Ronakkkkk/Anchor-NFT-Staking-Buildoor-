@@ -18,6 +18,7 @@ pub mod anchor_nft_staking {
 
     pub fn stake(ctx: Context<Stake>) -> Result<()> {
         let clock = Clock::get().unwrap();
+       
         msg!("Approving delegate");
 
         let cpi_approve_program = ctx.accounts.token_program.to_account_info();
@@ -29,6 +30,27 @@ pub mod anchor_nft_staking {
 
         let cpi_approve_ctx = CpiContext::new(cpi_approve_program, cpi_approve_accounts);
             token::approve(cpi_approve_ctx,1)?;
+        
+        msg!("Freezng token account");
+        let authority_bump = *ctx.bumps.get("program_authority").unwrap();
+        invoke_signed(
+            &freeze_delegated_account(
+                ctx.accounts.metadata_program.key(),
+                ctx.accounts.program_authority.key(),
+                ctx.accounts.nft_token_account.key(),
+                ctx.accounts.nft_edition.key(),
+                ctx.accounts.nft_mint.key()
+            )
+
+            &[
+                ctx.accounts.program_authority.to_account_info(),
+                ctx.accounts.nft_token_account.to_account_info(),
+                ctx.accounts.nft_edition.to_account_info(),
+                ctx.accounts.nft_mint.to_account_info(),
+                ctx.accounts.metadata_program.to_account_info(),
+            ],
+            &[&[b"authority", &[authority_bump]]],
+        )
 
 
         Ok(())
