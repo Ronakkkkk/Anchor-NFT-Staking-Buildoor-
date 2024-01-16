@@ -2,6 +2,7 @@
 import { Program } from "@coral-xyz/anchor";
 import { AnchorNftStaking } from "../target/types/anchor_nft_staking";
 import { setupNft } from "./utils/setupNft";
+import { expect } from "chai";
 
 describe("anchor-nft-staking", () => {
   // Configure the client to use the local cluster.
@@ -32,6 +33,9 @@ describe("anchor-nft-staking", () => {
       nftEdition: nft.masterEditionAddress,
        metadataProgram: METADATA_PROGRAM_ID,
       }).rpc()
+
+      const account = await program.account.userStakeInfo.fetch(stakeStatePda)
+        expect(account.stakeState === "Staked")
     // const tx = await program.methods.initialize().rpc();
     // console.log("Your transaction signature", tx);
   });
