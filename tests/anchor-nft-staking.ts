@@ -39,4 +39,14 @@ describe("anchor-nft-staking", () => {
     // const tx = await program.methods.initialize().rpc();
     // console.log("Your transaction signature", tx);
   });
+
+  it("Redeems",async () => {
+    await program.methods.redeem()
+    .accounts({
+      nftTokenAccount: nft.tokenAddress,
+      stakeMint: mint,
+      userStakeAta: tokenAddress
+    })
+    .rpc()
+  })
 });
