@@ -69,6 +69,11 @@ pub mod anchor_nft_staking {
         Ok(())
     }
 
+    pub fn redeem(ctx: Context<Stake>) -> Result<()>{
+
+
+    }
+
 }
 
 
@@ -136,6 +141,48 @@ pub struct Stake<'info> {
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
     pub metadata_program: Program<'info, Metadata>,
+
+}
+
+#[derive(Accounts)]
+pub struct Redeem<'info> {
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    #[account(
+        mut,
+        token::authority= user,
+    )]
+    pub nft_token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub stake_mint: Account<'info, Mint>
+
+    ///Check: Manual check 
+    #[account(seeds= ["mint".as_bytes().as_ref()], bump)]
+    pub stake_authority = UncheckedAccount<'info>,
+
+    #[account(
+        init_if_needed,
+        payer = user,
+        associated_token::mint=stake_mint,
+        associated_token::authority=user
+    )]
+    pub user_stake_ata: Account<'info, TokenAccount>,
+
+    #[account(
+        mut,
+        seeds= [user.key().as_ref(), nft_token_account.key().as_ref()],
+        bump,
+        constraint = *user.key == stake_state.user_pubkey,
+        constraint = nft_token_account.key() == stake_state.token_account
+    )]
+    pub stake_state: Account<'info, UserStakeInfo>,
+    pub associated_token_program: Program<'info, AssociatedToken>
+   
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+    pub rent: Sysvar<'info, Rent>,
 
 }
 
