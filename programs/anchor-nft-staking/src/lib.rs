@@ -71,6 +71,7 @@ pub mod anchor_nft_staking {
 
     pub fn redeem(ctx: Context<Stake>) -> Result<()>{
 
+        Ok(())
 
     }
 
@@ -156,11 +157,11 @@ pub struct Redeem<'info> {
     pub nft_token_account: Account<'info, TokenAccount>,
 
     #[account(mut)]
-    pub stake_mint: Account<'info, Mint>
+    pub stake_mint: Account<'info, Mint>,
 
-    ///Check: Manual check 
+    /// CHECK: Manual check 
     #[account(seeds= ["mint".as_bytes().as_ref()], bump)]
-    pub stake_authority = UncheckedAccount<'info>,
+    pub stake_authority: UncheckedAccount<'info>,
 
     #[account(
         init_if_needed,
@@ -178,8 +179,7 @@ pub struct Redeem<'info> {
         constraint = nft_token_account.key() == stake_state.token_account
     )]
     pub stake_state: Account<'info, UserStakeInfo>,
-    pub associated_token_program: Program<'info, AssociatedToken>
-   
+    pub associated_token_program: Program<'info, AssociatedToken>,
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
     pub rent: Sysvar<'info, Rent>,
