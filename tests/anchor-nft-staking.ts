@@ -48,5 +48,9 @@ describe("anchor-nft-staking", () => {
       userStakeAta: tokenAddress
     })
     .rpc()
+
+    const account = await program.account.userStakeInfo.fetch(stakeStatePda)
+    expect(account.stakeState === "Unstaked")
+    const nftTokenAccount = await getAccount(provider.connection, tokenAddress)
   })
 });
