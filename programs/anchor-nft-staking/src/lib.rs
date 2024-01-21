@@ -71,6 +71,51 @@ pub mod anchor_nft_staking {
 
     pub fn redeem(ctx: Context<Stake>) -> Result<()>{
 
+        require!(
+            ctx.accounts.stake_state.is_initialized,
+            StakeError::UninitializedAccount
+        );
+
+        require!(
+            ctx.accounts.stake_state.stake_state == StakeState::Staked,
+            StakeError::InvalidStakeState
+        );
+
+        let clock = Clock::get()?;
+
+        msg!(
+            "Stake last redeem: {:?}",
+            ctx.accounts.stake_state.last_stake_redeem
+        );
+
+        msg!("Current time: {;?}", clock.unix_timestamp);
+        let unix_time = clock.unix_timestamp - ctx.accounts.stake_state.last_stake_redeem;
+        msg!("Secongs since last staked: {:?}", unix_time);
+        let redeem_amount = (10 * i64::pow(10,2) * unix_time) / (24*60*60);
+        msg!("Eligible reddem amount: {:?}", reddem_amount);
+
+        msg!("Minting staking rewards");
+        token::mint_to(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                MintTo{
+                    mint: ctx.accounts.stake_mint.to_account_info(),
+                    to: ctx.accounts.user_stake_ata.to_account_info().
+                    authority: ctx.accounts.stake_authority.to_account_info(),
+                }
+                &[&[
+                    b"mint".as_ref(),
+                    &[*ctx.bumps.get("stake_authority").unwrap()],
+                ]],
+            ),
+            reddem_amount.try_into().unwrap(),
+
+        )?;
+
+        ctx.accounts.stake_state.last_stake_redeem = clock.unix_time;
+        msg!("Updates last stake redeem time: {:?}", ctx.accounts.stake_state.last_stake_redeem)
+
+
         Ok(())
 
     }
@@ -190,6 +235,12 @@ pub struct Redeem<'info> {
 pub enum StakeError {
     #[msg("NFT already staked")]
     AlreadyStaked,
+
+    #[msg("State account is unintialized")]
+    UninitializedAccount,
+`       
+    #[msg("Stake state is invalid")]
+    InvalidStakeState,
 }
 
 
