@@ -84,7 +84,7 @@ pub mod anchor_nft_staking {
         let clock = Clock::get()?;
 
         msg!(
-            "Stake last redeem: {:?}",
+            "Stake last redeeem: {:?}",
             ctx.accounts.stake_state.last_stake_redeem
         );
 
