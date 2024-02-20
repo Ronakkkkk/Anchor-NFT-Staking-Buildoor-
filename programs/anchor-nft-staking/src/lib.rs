@@ -163,7 +163,7 @@ pub mod anchor_nft_staking {
     let cpi_revoke_ctx = CpiContext::new(cpi_revoke_program, cpi_revoke_accounts);
     token::revoke(cpi_revoke_ctx)?;
 
-        let clock = Clock::get()?;
+        let clock = Clock::get()?; 
 
         msg!(
             "Stake last redeem: {:?}",
